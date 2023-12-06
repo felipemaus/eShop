@@ -3,8 +3,11 @@ import Button from "@/app/components/Button";
 import ProductImage from "@/app/components/products/ProductImage";
 import SetColor from "@/app/components/products/SetColor";
 import SetQuantity from "@/app/components/products/setQuantity";
+import { useCart } from "@/hooks/useCart";
 import { Rating } from "@mui/material";
-import { useCallback, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
+import { MdCheckCircle } from "react-icons/md";
 
  interface ProductDetailsProps{
     product: any
@@ -34,6 +37,8 @@ import { useCallback, useState } from "react";
  
  const ProductDetails:React.FC<ProductDetailsProps> = ({product}) => {
    
+    const { handleAddProductToCart, cartProducts } = useCart();
+    const [isProductInCart, setIsProductInCart] = useState(false);
     const [cartProduct, setCartProduct] = useState<CartProductType>({ 
         id:product.id,
         name: product.name,
@@ -42,7 +47,11 @@ import { useCallback, useState } from "react";
         brand:product.brand,
         selectedImg: {...product.images[0]},
         quantity: 1,
-        price:product.price,})
+        price:product.price});
+
+
+    const router = useRouter()    
+    
 
     const productRating = product.reviews.reduce((acc:number, item: any)=> item.rating + acc, 0) / product.reviews.length
 
@@ -68,6 +77,18 @@ import { useCallback, useState } from "react";
             return {...prev, quantity: --prev.quantity}
         })
     } ,[cartProduct])
+
+    useEffect(()=>{
+        setIsProductInCart(false)
+
+        if (cartProducts) {
+            const existingIndex = cartProducts.findIndex((item)=> item.id == product.id )
+        
+            if (existingIndex > -1) {
+                setIsProductInCart(true);
+            }
+        }
+    },[cartProducts])
 
    return <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
        <ProductImage cartProduct={cartProduct} product={product} handleColorselect={handleColorSelecte} />
@@ -100,21 +121,37 @@ import { useCallback, useState } from "react";
             </div>
             <div className={product.inStock ? 'text-teal-400' : 'text-rose-400' }>{product.inStock ? 'Disponível no estoque' : "Sem unidades no estoque"}</div>
             <Horizontal />
-            <SetColor cartProduct={cartProduct} images={product.images} handleColorSelect={handleColorSelecte} />
-            <Horizontal />
-            <SetQuantity 
-                cartProduct={cartProduct} 
-                handleQtyIncrease={handleQtyIncrease}
-                handleQtyDecrease={handleQtyDecrease}
-                cartCounter
-            />
-            <Horizontal />
-            <div className="max-w-[300px]">
-            <Button         
-                label="Adicionar ao carrinho"
-                onClick={()=>{}} 
-             />
-            </div>
+            {isProductInCart ? (
+                <>
+                    <p className="mb-2 text-slate-500 flex items-center gap-1">
+                        <MdCheckCircle size={20} className="text-teal-400" />
+                        <span>Produto adicionado ao carrinho</span>
+                    </p>
+                    <div className="max-w-[300px]">
+                        <Button label="Ver o carrinho" outlined onClick={()=> {
+                            router.push("/cart")
+                        } } />
+                    </div>
+                </>
+                ) : ( 
+                <>
+                    <SetColor cartProduct={cartProduct} images={product.images} handleColorSelect={handleColorSelecte} />
+                    <Horizontal />
+                    <SetQuantity 
+                        cartProduct={cartProduct} 
+                        handleQtyIncrease={handleQtyIncrease}
+                        handleQtyDecrease={handleQtyDecrease}
+                        cartCounter
+                    />
+                    <Horizontal />
+                    <div className="max-w-[300px]">
+                        <Button         
+                            label="Adicionar ao carrinho"
+                            onClick={()=> handleAddProductToCart(cartProduct)} 
+                        />
+                    </div>
+                </>
+            )}
         </div>
     </div>
  }

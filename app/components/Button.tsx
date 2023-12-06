@@ -24,6 +24,7 @@ const Button:React.FC<ButtonProps> = ({
   return (
     <button
         disabled={disabled}
+        onClick={onClick}
         className={`
             disabled:opacity-70
             disabled:cursor-not-allowed
@@ -39,7 +40,7 @@ const Button:React.FC<ButtonProps> = ({
             ${outlined ? "bg-white" : "bg-slate-700"}
             ${outlined ?"text-slate-700" : "text-white"}  
             ${small ? "text-sm font-light" : "text-md font-semibold"} 
-            ${small ? "py-1 px-2 border-[1px" : "py-3 px-4 border-2"} 
+            ${small ? "py-1 px-2 border-[1px]" : "py-3 px-4 border-2"} 
             ${custom ? custom : '' }
             `}
     >
