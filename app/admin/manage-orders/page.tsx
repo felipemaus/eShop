@@ -1,7 +1,11 @@
 
-const ManageOrders =()=> {
+const ManageOrders = async () => {
+
+
   return (
-    <div>ManageOrders</div>
+    <div className="p-8">
+       orders
+    </div>
   )
 }
 

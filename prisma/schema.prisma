@@ -49,7 +49,7 @@ model Product {
     price       Float
     brand       String
     category    String
-    inShock     Boolean
+    inStock     Boolean
     images      Image[]
     reviews     Review[]
 }
