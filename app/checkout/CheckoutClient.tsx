@@ -89,7 +89,7 @@ const CheckoutClient = () => {
                         Pagamento realizado com sucesso!
                     </div>
                     <div className="max-w-[220px] w-full">
-                        <Button label="Veja seus pedidos" onClick={() => {router.push('/order')}} />
+                        <Button label="Veja seus pedidos" onClick={() => {router.push('/orders')}} />
                     </div>
                 </div>
             )}
