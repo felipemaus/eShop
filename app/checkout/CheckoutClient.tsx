@@ -42,12 +42,10 @@ const CheckoutClient = () => {
                  }
                  return res.json();
                 }).then((data)=>{
-                 console.log('teste', data);
                  setClientSecret(data.paymentIntent.client_secret);
                  handleSetPaymentIntent(data.paymentIntent.id);
              }).catch((error)=>{
                  setError(true);
-                 console.log('error', error)
                  toast.error("Ops! Alguma coisa deu errado!")
              })
         }

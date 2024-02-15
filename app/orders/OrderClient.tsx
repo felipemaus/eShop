@@ -7,9 +7,6 @@ import Heading from "@/app/components/Heading";
 import Status from "@/app/components/Status";
 import { MdAccessTimeFilled,  MdDeliveryDining, MdDone, MdRemoveRedEye } from "react-icons/md";
 import ActionBtn from "@/app/components/ActionBtn";
-import { useCallback } from "react";
-import axios from "axios";
-import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import moment from "moment";
 
@@ -35,7 +32,7 @@ const OrdersClient: React.FC<OrdersClientProps> = ({
             return {
                 id: order.id,
                 customer: order.user.name,
-                amount: formatPrice(order.amount),
+                amount: formatPrice(order.amount / 100),
                 paymentStatus: order.status,
                 date: moment(order.createDate).fromNow(),
                 deliveryStatus: order.deliveryStatus,

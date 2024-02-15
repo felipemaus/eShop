@@ -1,6 +1,6 @@
 import Stripe from "stripe";
 import prisma from '@/libs/prismadb';
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 import { CartProductType } from "@/app/product/[productId]/ProductDetails";
 import { getCurrentUser } from "@/actions/getCurrentUser";
 
@@ -78,6 +78,7 @@ export async function POST(request: Request){
 
     } else {
         // create the intent
+        
         const paymentIntent = await stripe.paymentIntents.create({
             amount: total,
             currency:'usd',
@@ -87,9 +88,13 @@ export async function POST(request: Request){
         //create the order
         orderData.paymentIntentId = paymentIntent.id
 
-        await prisma.order.create({
+        const newOrder = await prisma.order.create({
             data: orderData
-        })
+        });
+
+        if (newOrder) {
+            return NextResponse.json(newOrder)
+        }
 
 
         return NextResponse.error();
